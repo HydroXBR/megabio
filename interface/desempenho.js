@@ -111,7 +111,7 @@ function addAnimationOnScroll() {
 window.addEventListener('scroll', addAnimationOnScroll);
 
 document.addEventListener('DOMContentLoaded', function(){
-	if (User.isLoggedIn()) {
+	/*if (User.isLoggedIn()) {
 		const userInfo = User.getUserInfo();
 		let li = document.getElementById("login")
 		li.innerHTML = ""
@@ -141,13 +141,14 @@ document.addEventListener('DOMContentLoaded', function(){
 		}
 	} else {
 		console.log("Usuário não está logado.");
-	}
+	}*/
 
 	const ec = txt => encodeURIComponent(txt)
 	const dec = txt => decodeURIComponent(txt)
 	const gebi = id => document.getElementById(id)
 	const gebc = c => document.getElementsByClassName(c)
 	const voltar = gebi("voltar");
+	const prob = gebi("prob");
 
 	const cid = new URL(window.location.href).searchParams.get("id")
 	if(!cid){
@@ -179,95 +180,123 @@ document.addEventListener('DOMContentLoaded', function(){
 		const r = rrr.filter(a => a.id == id)
 		let rr = r[0]
 		if(!rr) return alert("Usuário não encontrado! Contate Isaías Nascimento para mais informações.") 
-		rr.total = rr.port + rr.lit + rr.hist + rr.fis + rr.quim + rr.bio + rr.geo + rr.mat;
+		const materiass = rr.simulado.organization.map(item => item.materia);
+		rr.total = materiass.reduce((acc, key) => acc + (rr[key] || 0), 0)
 
-		gebi("name").innerHTML = rr.completename
-		gebi("serie").innerHTML = Number(rr.turma) > 3 ? `${Number(rr.turma) - 3}° ano` : `${Number(rr.turma)}° ano`  
+		gebi("name").innerHTML = rr.completename.replace(/\|(.+)$/, "")
+		gebi("serie").innerHTML = Number(rr.turma) > 3 ? `${Number(rr.turma) - 3}ª chamada` : `${Number(rr.turma)}° ano`  
 
-		gebi("title").innerHTML = rr.simulado.name + ` (${rr.simulado.date})`
+		gebi("title").innerHTML = rr.simulado.name + ` (${rr.simulado.date.replace(/\-/gmi, "/")})`
 		voltar.addEventListener('click', function(event){
-			window.location.href = `/ranking?id=${rr.simulado.id}`
+			window.location.href = "https://ibb.co/" + rr.completename.match(/\|(.+)$/)[0].replace("|", "")
+		})
+		prob.addEventListener('click', function(event){
+			window.location.href = `https://api.whatsapp.com/send?phone=559284507170&text=Ol%C3%A1%2C%20Isa%C3%ADas!%20Sou%20${rr.completename}%2C%20e%20estou%20com%20d%C3%BAvidas%2Fproblemas%20em%20rela%C3%A7%C3%A3o%20ao%20simulado%20de%20ID%20${idsimulado}. %20(N%C3%83O%20APAGAR!)`
 		})
 
 		async function history(name) {
-			try {
-					const simuladoss = await simul();
+			try{
+				const simuladoss = await simul();
+				const anteriores = simuladoss
+				var data = [];
 
-					const anteriores = simuladoss/*.filter(e => e.id !== rr.simulado.id)*/;
+				var coresHex = {
+					'azul': '#0000FF',
+					'verde': '#008000',
+					'vermelho': '#FF0000',
+					'laranja': '#FFA500',
+					'rosa': '#FFC0CB',
+					'amarelo': '#FFFF00',
+					'ciano': '#00FFFF'
+				};
 
+				const coresArray = Object.values(coresHex);
+				function escolherCorAleatoria(array) {
+					if (array.length >= coresArray.length) {
+						throw new Error("Não há cores únicas disponíveis para selecionar.");
+					}
+
+					var corAleatoria;
+					do {
+						var indiceAleatorio = Math.floor(Math.random() * coresArray.length);
+						corAleatoria = coresArray[indiceAleatorio];
+					} while (array.find(e => e.color === corAleatoria));
+
+					return corAleatoria;
+				}
+
+				function removerAcentos(str) {
+					return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+				}
+
+				const promises = anteriores.map(simulado => {
+					return fetchsimul(simulado.id).then(anterior => {
+						var anteriorAluno = anterior.find(e => removerAcentos(e.completename).toLowerCase() == removerAcentos(rr.completename).toLowerCase());
+						
+						if (anteriorAluno) {
+							let obj = {
+								label: anteriorAluno.simulado.date,
+								realvalue: anteriorAluno.percent,
+								value: `${anteriorAluno.percent}% (${anteriorAluno.pont}/${anteriorAluno.simulado.questions})`,
+								color: escolherCorAleatoria(data)
+							}
+
+							data.push(obj);
+						}
+					});
+				});
+
+				await Promise.all(promises);
+
+				if (data.length == 1) {
+					gebi("graficous").style.display = "none";
+					gebi("nota2").innerText = "Parabéns! É seu primeiro #Simulado registrado! Frequente todos os próximos simulados para que você compare a sua pontuação com os simulados anteriores :)"
+				} else {
+					graphus();
+				}
+
+				function graphus() {
 					var canvas = document.getElementById('graficous');
 					var ctx = canvas.getContext('2d');
-					ctx.fillText("Comp. com simulados anteriores", canvas.width / 2.5, canvas.height - 10)
+					ctx.fillText("Comp. com simulados anteriores", canvas.width / 2.5, canvas.height - 10);
 					var barWidth = 30;
 					var barMargin = 50;
 					var startX = 50;
 					var startY = canvas.height - 50;
+					
+					var maxPercentage = Math.max(...data.map(item => item.realvalue));
+					var maxBarHeight = canvas.height * 0.8; 
+					var scale = maxBarHeight / maxPercentage;
 
-					var data = [];
-
-					var coresHex = {
-						'azul': '#0000FF',
-						'verde': '#008000',
-						'vermelho': '#FF0000',
-						'laranja': '#FFA500',
-						'rosa': '#FFC0CB',
-						'amarelo': '#FFFF00',
-						'ciano': '#00FFFF'
+					function parseDate(dateString) {
+						let parts = dateString.split('-');
+						let formattedDate = `${parts[1]}-${parts[0]}-${parts[2]}`;
+						return new Date(formattedDate);
 					}
 
-					const coresArray = Object.values(coresHex);
+					data.sort((a, b) => parseDate(a.label) - parseDate(b.label));
 
-					function escolherCorAleatoria() {
-						var indiceAleatorio = Math.floor(Math.random() * coresArray.length);
-						return coresArray[indiceAleatorio];
+					for (var i = 0; i < data.length; i++) {
+						var barHeight = data[i].realvalue * scale; 
+						var x = startX + (barWidth + barMargin) * i; 
+						var y = startY - barHeight;
+
+						ctx.fillStyle = data[i].color;
+						ctx.fillRect(x, y, barWidth, barHeight);
+
+						var textWidth = ctx.measureText(data[i].label).width;
+						var textX = x + (barWidth - textWidth) / 2; 
+						var textY = y - 5;
+
+						ctx.fillStyle = '#000';
+						ctx.fillText(data[i].label, textX, startY + 20);
+						ctx.fillText(data[i].value, textX, startY +10);
 					}
-
-					const promises = anteriores.map(simulado => {
-						return fetchsimul(simulado.id).then(anterior => {
-							var anteriorAluno = anterior.find(e => e.completename == rr.completename);
-							if (anteriorAluno) {
-								let obj = {
-									label: anteriorAluno.simulado.date,
-									realvalue: anteriorAluno.percent,
-									value: `${anteriorAluno.percent}% (${anteriorAluno.pont}/${anteriorAluno.simulado.questions})`,
-									color: escolherCorAleatoria(coresHex)
-								}
-
-								data.push(obj)
-							}
-						});
-					});
-
-					await Promise.all(promises);
-
-				var maxPercentage = Math.max(...data.map(item => item.realvalue));
-				var maxBarHeight = canvas.height * 0.8; 
-				var scale = maxBarHeight / maxPercentage;
-
-				data.sort((a, b) => new Date(b.realvalue) - new Date(a.realvalue))
-
-				for (var i = 0; i < data.length; i++) {
-					var barHeight = data[i].realvalue * scale; 
-					var x = startX + (barWidth + barMargin) * i; 
-					var y = startY - barHeight;
-
-					ctx.fillStyle = data[i].color;
-					ctx.fillRect(x, y, barWidth, barHeight);
-
-					var textWidth = ctx.measureText(data[i].label).width;
-					var textX = x + (barWidth - textWidth) / 2; 
-
-					var textY = y - barHeight - 5;
-
-					ctx.fillStyle = '#000';
-					ctx.fillText(data[i].label, textX, startY + 20);
-					ctx.fillText(data[i].value, textX, startY+10);
 				}
 
 				var canvas2 = document.getElementById('radarChart');
 				var ctx2 = canvas2.getContext('2d');
 
-				// Dados de exemplo (valores para cada categoria)
 				var data2 = [	];
 				const promises2 = anteriores
 					.filter(simulado => simulado.id === rr.simulado.id) 
@@ -278,7 +307,7 @@ document.addEventListener('DOMContentLoaded', function(){
 								var org = anteriorAluno.simulado.organization
 								for(var i = 0; i < org.length; i++){
 									let objj = {
-										value: anteriorAluno[org[i].materia]*10, 
+										value: (anteriorAluno[org[i].materia]/org[i].q)*100, 
 										materia: org[i].name
 									}
 
@@ -290,10 +319,8 @@ document.addEventListener('DOMContentLoaded', function(){
 
 				await Promise.all(promises2);
 
-				// Legendas para cada matéria
 				var legends = data2.map(item => item.materia);
 
-				// Configurações do gráfico
 				var centerX = canvas2.width / 2;
 				var centerY = canvas2.height / 2;
 				var radius = Math.min(centerX, centerY) * 0.8;
@@ -395,7 +422,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
 				tblBody.appendChild(newRow)
 
-				for (var i = 0; i < selected.length + 8; i++) {
+				for (var i = 0; i < selected.length + rr.simulado.special.length; i++) {
 					var row = document.createElement("tr");
 					var reali = i;
 					switch(true) {
@@ -408,23 +435,8 @@ document.addEventListener('DOMContentLoaded', function(){
 						case (i >= rr.simulado.special[1] && i <= rr.simulado.special[2]-1):
 							reali = i - 1;
 							break;
-						case (i >= rr.simulado.special[2] && i <= rr.simulado.special[3]-1):
+						case (i >= rr.simulado.special[2]):
 							reali = i - 2;
-							break;
-						case (i >= rr.simulado.special[3] && i <= rr.simulado.special[4]-1):
-							reali = i - 3;
-							break;
-						case (i >= rr.simulado.special[4] && i <= rr.simulado.special[5]-1):
-							reali = i - 4;
-							break;
-						case (i >= rr.simulado.special[5] && i <= rr.simulado.special[6]-1):
-							reali = i - 5;
-							break;
-						case (i >= rr.simulado.special[6] && i <= rr.simulado.special[7]-1):
-							reali = i - 6;
-							break;
-						case (i >= rr.simulado.special[7]):
-							reali = i - 7;
 							break;
 					}
 
@@ -435,6 +447,7 @@ document.addEventListener('DOMContentLoaded', function(){
 							var td = document.createElement("td");
 							td.setAttribute("colspan", "4"); 
 							td.classList.add("materia")
+							
 							cellText.innerText = mat.find(m => m.special == i).materia
 							td.appendChild(cellText); 
 							row.appendChild(td); 

@@ -1,1 +1,1 @@
-~/metodo/node_modules/node/bin/node ~/metodo-1/node_modules/npm/bin/npm-cli.js $@
+~/megabio/node_modules/node/bin/node ~/megabio/node_modules/npm/bin/npm-cli.js $@

@@ -7,8 +7,8 @@
 html, body {
 	height: 100%;
 	margin: 0;
+	background-image:url(https://i.ibb.co/jk7nHMW/green-dna-strand-is-shown-against-green-background-542670-12451.png);
 	padding: 0;
-	background-image: url("https://s3.amazonaws.com/i.snag.gy/hATqGL.jpg");
 	background-size: cover;
 	overflow-y: auto; 
 }
@@ -22,7 +22,7 @@ h1 {
 }
 
 .navbar {
-	background-color: #0C1248; 
+	background-color: #001900; 
 	color: #fff;
 	padding: 20px 0;
 	font-family: 'Roboto', sans-serif; 
@@ -54,7 +54,13 @@ h1 {
 
 .logo {
 	font-size: 24px;
-	color: #FE0000;
+	color: #ffffff;
+	margin-left: 10px;
+}
+
+.logona {
+	font-size: 24px;
+	color: #ffeb0a;
 	margin-left: 10px;
 }
 
@@ -104,7 +110,7 @@ h1 {
 		}
 }
 .profile-picture, .metodo {
-		width: 40px; 
+		width: 70px; 
 		height: auto;
 		border-radius: 50%; 
 		box-shadow: 0 0 5px rgba(0, 0, 0, 0.3); 
@@ -181,43 +187,55 @@ button:hover:before,button:hover:after:not(.btn2){
 	font-family: "Trebuchet MS", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", sans-serif;
 }
 
-table{
+table {
 	align: center;
 	margin: auto;
 	text-align: center;
+	border-collapse: collapse;
+	width: 80%;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	border-radius: 10px;
+	overflow: hidden;
+	font-family: 'Arial', sans-serif;
+}
+
+th, td {
+	padding: 12px 15px;
+	text-align: center;
+}
+
+tr:nth-child(even) {
+	background-color: #f2f2f2;
+}
+
+th {
+	background-color: #333;
+	color: white;
+}
+
+tr:hover {
+	background-color: #ddd;
 }
 
 .namecolorouro {
-	background: rgb(255,171,0);
 	background: linear-gradient(0deg, rgba(255,171,0,1) 3%, rgba(255,255,255,1) 100%);
+	color: #000;
 }
 
 .namecolorprata {
-	background: rgb(185,185,185);
 	background: linear-gradient(0deg, rgba(185,185,185,1) 3%, rgba(255,255,255,1) 100%);
+	color: #000;
 }
 
 .namecolorbronze {
-	background: rgb(179,162,128);
 	background: linear-gradient(0deg, rgba(179,162,128,1) 3%, rgba(255,255,255,1) 100%);
+	color: #000;
 }
 
-td{
-	align: center;
-	margin: auto;
-	text-align: center;
-	/*border-bottom: 0.5px dotted black;*/
+a {
+	color: inherit;
 }
 
-tr{
-	align: center;
-	text-align: center;
-	margin: auto;
-}
-
-a{
-	text-decoration: none;
-}
 
 .button-33 {
 	padding: 1em 2em;
@@ -264,7 +282,7 @@ a.copy{
 }
 
 ::-webkit-scrollbar {
-	width: 15px;
+	width: 5px;
 	height: 15px;
 }
 
@@ -274,7 +292,7 @@ a.copy{
 }
 
 ::-webkit-scrollbar-thumb {
-	background-image: linear-gradient(45deg, #00aeff, #a68eff);
+	background-image: linear-gradient(45deg, #3100e0, #060019);
 	border-radius: 10px;
 	-webkit-box-shadow: rgba(0,0,0,.12) 0 3px 13px 1px;
 }
@@ -391,13 +409,14 @@ select::-ms-expand {
 	height: 70px;
 }
 
-h2 {
-	color: #333; 
-	background-color: #f4f4f4; 
+#title {
+	color: white; /* Alterando para uma cor mais escura */
+	background-color: var(--darkgray);
+	font-style: oblique;
 	border-radius: 5px; 
 	padding: 10px 15px;
 	font-size: 1.5rem; 
-	font-family: 'Roboto', sans-serif; 
+	font-family: 'Montserrat', sans-serif;
 	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
 	text-align: center;
 	margin-bottom: 20px; 

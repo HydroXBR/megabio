@@ -6,6 +6,7 @@ const { token } = process.env
 import express from 'express'
 import cors from 'cors'
 const app = express()
+const { PORT } = process.env
 import bodyParser from "body-parser"
 const __dirname = dirname(fileURLToPath(import.meta.url))
 import user from "./database/user.js"
@@ -18,91 +19,32 @@ const ec = txt => encodeURIComponent(txt)
 const dec = txt => decodeURIComponent(txt)
 var simulados = [
 	{
-		name: "3° Simulado 2024", 
-		description: "3° Simulado de 2024",
-		model: "PSC",
-		date: "09-05-2024",
-		id: "032024",
-		organization: [{materia: "port", q:10, name: "Língua Portuguesa"},{materia: "lit", q:6, name: "Literatura"},{materia: "hist", q:6, name: "História"},{materia: "geo", q:6, name: "Geografia"},{materia: "bio", q:6, name: "Biologia"},{materia: "quim", q:6, name: "Química"},{materia: "fis", q:6, name: "Física"},{materia: "mat", q:8, name: "Matemática"}],
-		special: [0, 11, 18, 25, 32, 39, 46, 53],
+		name: "1° Simulado MEGABIO 2024", 
+		description: "DNA da Aprovação",
+		model: "megabio",
+		date: "26-05-2024",
+		id: "MBIO1",
+		organization: [{materia: "cit", q:12, name: "Citologia"},{materia: "ben", q:9, name: "Bioenergética"},{materia: "fisio", q:24, name: "Fisiologia"}],
+		special: [0, 13, 23],
 		matspecial: [
-			{ materia: "Português", special: 0 },
-			{ materia: "Literatura", special: 11 },
-			{ materia: "História", special: 18 },
-			{ materia: "Geografia", special: 25 },
-			{ materia: "Biologia", special: 32 },
-			{ materia: "Química", special: 39 },
-			{ materia: "Física", special: 46 },
-			{ materia: "Matemática", special: 53 }
+			{ materia: "Citologia", special: 0 },
+			{ materia: "Bioenergética", special: 13 },
+			{ materia: "Fisiologia", special: 23 }
 		]
 		,
 		intervals: {
-			port: [1, 10],
-			lit: [11, 16],
-			hist: [17, 22],
-			geo: [23, 28],
-			bio: [29, 34],
-			quim: [35, 40],
-			fis: [41, 46],
-			mat: [47, 54]
+			cit: [1, 12],
+			ben: [13, 21],
+			fisio: [22, 45]
 		},
-		turmas: [2,3],
-		answers: [
-			{
-				turma:2,
-				respostas:["E","E","C","D","A","B","E","C","A","E","D","C","B","C","B","D","A","D","C","B","D","B","E","E","B","C","B","B","C","A","A","D","D","E","E","D","C","A","D","A","C","E","C","A","C","B","A","D","B","B","C","B","D","E"]
-			},
-			{
-				turma:3,
-				respostas:["A","B","C","D","C","B","C","C","D","E","D","B","B","B","A","C","B","E","C","C","C","A","C","B","B","B","A","A","C","C","A","C","B","A","C","A","E","E","A","A","D","D","E","C","B","B","D","D","C","E","C","E","E","D"]
-			}
-		],
-		questions: 54
-	},
-	{
-		name: "2° Simulado 2024", 
-		description: "2° Simulado de 2024",
-		model: "PSC",
-		date: "28-02-2024",
-		id: "022024",
-		organization: [{materia: "port", q:10, name: "Língua Portuguesa"},{materia: "lit", q:6, name: "Literatura"},{materia: "hist", q:6, name: "História"},{materia: "geo", q:6, name: "Geografia"},{materia: "bio", q:6, name: "Biologia"},{materia: "quim", q:6, name: "Química"},{materia: "fis", q:6, name: "Física"},{materia: "mat", q:8, name: "Matemática"}],
-		special: [0, 11, 18, 25, 32, 39, 46, 55],
-		intervals: {
-			port: [1, 10],
-			lit: [11, 16],
-			hist: [17, 22],
-			geo: [23, 28],
-			bio: [29, 34],
-			quim: [35, 40],
-			mat: [41, 48],
-			fis: [49, 54]
-		},
-		turmas: [1,2,3],
-		matspecial: [
-			{ materia: "Português", special: 0 },
-			{ materia: "Literatura", special: 11 },
-			{ materia: "História", special: 18 },
-			{ materia: "Geografia", special: 25 },
-			{ materia: "Biologia", special: 32 },
-			{ materia: "Química", special: 39 },
-			{ materia: "Matemática", special: 46 },
-			{ materia: "Física", special: 55 }
-		],
+		turmas: [1],
 		answers: [
 			{
 				turma:1,
-				respostas: ["B","A","A","A","A","D","D","D","B","E","A","A","B","E","B","C","D","D","A","B","B","B","A","C","E","E","C","C","A","C","B","E","C","A","C","E","A","B","D","C","C","E","D","A","C","B","C","B","C","C","D","D","E","C"]
-			},
-			{
-				turma:2,
-				respostas:["D","B","A","A","B","E","A","B","A","B","A","E","C","B","D","E","E","B","A","C","C","C","E","E","E","E","E","C","B","C","D","A","E","C","D","C","B","E","A","A","D","E","E","D","C","C","C","B","C","B","C","D","E","E"]
-			},
-			{
-				turma:3,
-				respostas:["B","A","A","X","A","B","B","C","C","E","C","E","B","E","B","A","B","C","E","E","C","D","D","B","B","C","E","A","C","C","B","E","D","D","E","C","B","E","A","C","B","D","A","D","A","C","E","A","C","A","C","B","B","C"]
+				respostas:["C","E","E","E","D","E","D","E","E","E","B","C","B","E","E","B","E","A","C","A","C","D","E","A","B","C","A","B","E","B","E","E","E","C","D","D","A","B","A","E","B","D","D","E","C"]
 			}
 		],
-		questions: 54
+		questions: 45
 	}
 ]
 const fetch = s => import('node-fetch').then(({default: fetch}) => fetch(s))
@@ -158,7 +100,7 @@ app.use(
 	express.static(path.join(__dirname, '/interface'))
 );
 
-app.listen(3000, () => {})
+app.listen(PORT, () => {console.log(`Listening at ${PORT}`)})
 
 
 app.set('view engine', 'ejs');
@@ -167,50 +109,20 @@ app.set('views', path.join(__dirname, '/interface'));
 // Website pages
 app.get('/',function(req,res) {
 	console.log("Access PRINCIPAL: "+ new Date())
-	res.sendFile(__dirname + '/interface/index.html')
+	res.sendFile(__dirname + '/interface/ranking.html')
 })
 
 app.get('/#',function(req,res) {
 	console.log("Access PRINCIPAL: "+ new Date())
-	res.sendFile(__dirname + '/interface/index.html')
+	res.sendFile(__dirname + '/interface/ranking.html')
 });
 
-app.get('/login',function(req,res) {
-	console.log("Access LOGIN: "+ new Date())
-	res.sendFile(__dirname + '/interface/login.html')
-});
-
-app.get('/cadastro',function(req,res) {
-	console.log("Access CADASTRO: "+ new Date())
-	res.sendFile(__dirname + '/interface/cadastro.html')
-});
-
-
-app.get('/admin',function(req,res) {
-	console.log("Access ADMIN, Cadastro: "+ new Date())
-	res.sendFile(__dirname + '/interface/admin.html')
-})
 
 app.get('/cadastroadmin',function(req,res) {
 	console.log("Access ADMIN, Cadastro: "+ new Date())
 	res.sendFile(__dirname + '/interface/cadastroadmin.html')
 })
 
-
-app.get('/sobre',function(req,res) {
-	console.log("Access SOBRE: "+ new Date())
-	res.sendFile(__dirname + '/interface/sobre.html')
-});
-
-app.get('/gerar',function(req,res) {
-	console.log("Access ADMIN GERAR: "+ new Date())
-	res.sendFile(__dirname + '/interface/gerar.html')
-});
-
-app.get('/pagamentos',function(req,res) {
-	console.log("Access PAGAMENTOS: "+ new Date())
-	res.sendFile(__dirname + '/interface/pagamentos.html')
-});
 
 app.get('/simuladoadm',function(req,res) {
 	console.log("Access ADMIN SIMULADOS: "+ new Date())
@@ -232,11 +144,6 @@ app.get('/desempenho',function(req,res) {
 	res.sendFile(__dirname + '/interface/desempenho.html')
 });
 
-app.get('/aluno',function(req,res) {
-	console.log("Access ADMIN ALUNO: "+ new Date())
-	res.sendFile(__dirname + '/interface/aluno.html')
-});
-
 app.get('/varsimulados',function(req,res) {
 	console.log("Access SYSTEM SIMULADOS: "+ new Date())
 	res.json(simulados)
@@ -255,25 +162,6 @@ app.get('/src',function(req,res) {
 	res.sendFile(__dirname + `/src/${required}.${format}`)
 })
 
-app.get('/recibo', async (req, res) => {
-	console.log("Access ADMIN RECIBO: "+ new Date())
-	res.sendFile(__dirname + '/interface/recibo.html')
-})
-
-app.get('/relatorio', async (req, res) => {
-	console.log("Access ADMIN RELATÓRIO: "+ new Date())
-	res.sendFile(__dirname + '/interface/relatorio.html')
-})
-
-app.get('/alunos', async (req, res) => {
-	try {
-		const alunos = await useradm.find().sort({ completename: 1 }); 
-		res.json(alunos);
-	}catch (err){
-		console.error('Erro ao buscar lembretes:', err);
-		res.status(500).send('Erro ao buscar lembretes');
-	}
-});
 
 app.get('/getalunobyid', async (req, res) => {
 	const id = req.query.id;
@@ -601,17 +489,10 @@ app.get('/apiranking', function(req,res) {
 		const usersArray = new Array;
 
 		for(var t = 0; t < r.length; t++){
-			let answers1 = simuatual.answers.find(e => e.turma == 1) ?  simuatual.answers.find(e => e.turma == 1).respostas : simuatual.answers.find(e => e.turma == 1) 
-			let answers2 = simuatual.answers.find(e => e.turma == 2).respostas
-			let answers3 = simuatual.answers.find(e => e.turma == 3).respostas
+			let answers1 = simuatual.answers.find(e => e.turma == 1) ?  simuatual.answers.find(e => e.turma == 1).respostas : simuatual.answers.find(e => e.turma == 1)
 
 			let answersel;
 			if(Number(r[t].turma) == 1) answersel = answers1
-			if(Number(r[t].turma) == 2) answersel = answers2
-			if(Number(r[t].turma) == 3) answersel = answers3
-			if(Number(r[t].turma) == 4) answersel = answers1
-			if(Number(r[t].turma) == 5) answersel = answers2
-			if(Number(r[t].turma) == 6) answersel = answers3
 
 			let arranswers = r[t].answers.split("")
 
@@ -631,7 +512,7 @@ app.get('/apiranking', function(req,res) {
 
 			let intervals = simuatual.intervals;
 
-			for (var i = 0; i < 54; i++) {
+			for (var i = 0; i < simuatual.questions; i++) {
 				if (arranswers[i] == answersel[i] || answersel[i] == "X") {
 					pontos++;
 					for (const [key, value] of Object.entries(intervals)) {
@@ -658,13 +539,11 @@ app.get('/apiranking', function(req,res) {
 					}
 				}
 				}
-
 				return `${firstName} ${secondName}`;
 			}
-
 			const u = {
 				user: {
-					name: g(r[t].completename),
+					name: g(r[t].completename.replace(/\|(.+)$/,"")),
 					completename: r[t].completename,
 					turma: Number(r[t].turma) >= 4 ? Number(r[t].turma) - 3 : r[t].turma,
 					pont: pontos,
