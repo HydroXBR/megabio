@@ -184,7 +184,7 @@ document.addEventListener('DOMContentLoaded', function(){
 		rr.total = materiass.reduce((acc, key) => acc + (rr[key] || 0), 0)
 
 		gebi("name").innerHTML = rr.completename.replace(/\|(.+)$/, "")
-		gebi("serie").innerHTML = Number(rr.turma) > 3 ? `${Number(rr.turma) - 3}ª chamada` : `${Number(rr.turma)}° ano`  
+		gebi("serie").innerHTML = Number(rr.turma) > 3 ? `${Number(rr.turma) - 3}ª chamada` : `${Number(rr.turma)}ª chamada`  
 
 		gebi("title").innerHTML = rr.simulado.name + ` (${rr.simulado.date.replace(/\-/gmi, "/")})`
 		voltar.addEventListener('click', function(event){
