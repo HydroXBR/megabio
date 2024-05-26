@@ -109,12 +109,12 @@ app.set('views', path.join(__dirname, '/interface'));
 // Website pages
 app.get('/',function(req,res) {
 	console.log("Access PRINCIPAL: "+ new Date())
-	res.sendFile(__dirname + '/interface/ranking.html')
+	res.sendFile(__dirname + '/interface/ranking?id=MBIO1')
 })
 
 app.get('/#',function(req,res) {
 	console.log("Access PRINCIPAL: "+ new Date())
-	res.sendFile(__dirname + '/interface/ranking.html')
+	res.sendFile(__dirname + '/interface/ranking?id=MBIO1')
 });
 
 
