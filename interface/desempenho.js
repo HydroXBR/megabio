@@ -567,7 +567,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
 			medidortotal.style.width = (rr.total/rr.simulado.questions)*100 + '%';
 
-			document.getElementById("pctotal").innerHTML = round(((rr.total)/54)*100,2) + '%';
+			document.getElementById("pctotal").innerHTML = round(((rr.total)/rr.simulado.questions)*100,2) + '%';
 			gebi("desctotal").innerHTML = `${rr.total} de ${rr.simulado.questions}`
 		}
 
