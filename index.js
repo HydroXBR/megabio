@@ -19,6 +19,38 @@ const ec = txt => encodeURIComponent(txt)
 const dec = txt => decodeURIComponent(txt)
 var simulados = [
 	{
+		name: "2° Simulado MEGABIO 2024", 
+		description: "DNA da Aprovação",
+		model: "megabio",
+		date: "28-08-2024",
+		id: "MBIO2",
+		organization: [{materia: "ndv", q:10, name: "Núcleo e Divisão"},{materia: "ben", q:10, name: "Bioenergética"},{materia: "gen", q:10, name: "Genética"},{materia: "bot", q:10, name: "Botânica"},{materia: "emb", q:5, name: "Embriologia"}],
+		special: [0, 11, 22, 33, 44],
+		matspecial: [
+			{ materia: "Núcleo e Divisão", special: 0 },
+			{ materia: "Bioenergética", special: 11 },
+			{ materia: "Genética", special: 22 },
+			{ materia: "Botânica", special: 33 },
+			{ materia: "Embriologia", special: 44 }
+		]
+		,
+		intervals: {
+			ndv: [1, 10],
+			ben: [11, 20],
+			gen: [21, 30],
+			bot: [31, 40],
+			emb: [41, 45]
+		},
+		turmas: [1],
+		answers: [
+			{
+				turma:1,
+				respostas:["D","D","E","B","C","D","B","B","D","D","C","C","B","A","E","A","A","E","A","C","A","E","B","D","C","D","B","E","B","E","B","C","E","C","E","C","D","A","E","C","C","A","B","E","C"]
+			}
+		],
+		questions: 45
+	},
+	{
 		name: "1° Simulado MEGABIO 2024", 
 		description: "DNA da Aprovação",
 		model: "megabio",
